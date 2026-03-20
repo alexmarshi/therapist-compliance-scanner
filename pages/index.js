@@ -1,46 +1,42 @@
 import React, { useState } from 'react';
-import './ScannerForm.css'; // Assuming you have a CSS file for styling
 
-const ScannerForm = () => {
-    const [inputValue, setInputValue] = useState('');
-    const [result, setResult] = useState(null);
+const ScannerPage = () => {
+  const [formData, setFormData] = useState({ input: '' });
+  const [results, setResults] = useState(null);
 
-    const handleInputChange = (event) => {
-        setInputValue(event.target.value);
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await fetch('https://api.example.com/scan', {  // Replace with your API endpoint
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ input: inputValue }),
-            });
-            const data = await response.json();
-            setResult(data.result);
-        } catch (error) {
-            console.error('Error:', error);
-            setResult('Error occurred during scanning.');
-        }
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Simulate API call
+    const simulatedResults = `Results for ${formData.input}`;
+    setResults(simulatedResults);
+  };
 
-    return (
-        <div className="scanner-form">
-            <h1>Scanner Form</h1>
-            <form onSubmit={handleSubmit}>
-                <input 
-                    type="text" 
-                    value={inputValue} 
-                    onChange={handleInputChange} 
-                    placeholder="Enter text to scan" 
-                    required 
-                />
-                <button type="submit">Scan</button>
-            </form>
-            {result && <div className="result">Result: {result}</div>}
-        </div>
-    );
+  const handleClear = () => {
+    setFormData({ input: '' });
+    setResults(null);
+  };
+
+  return (
+    <div>
+      <h1>Scanner Page</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="input"
+          value={formData.input}
+          onChange={handleChange}
+          placeholder="Enter input"
+        />
+        <button type="submit">Scan</button>
+        <button type="button" onClick={handleClear}>Clear</button>
+      </form>
+      {results && <div>Results: {results}</div>}
+    </div>
+  );
 };
 
-export default ScannerForm;
+export default ScannerPage;
